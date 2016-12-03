@@ -1,3 +1,3 @@
 # FANCY LIGHTBOX
 
-### [Live preview]()
+### [Live preview](https://pawelw1993.github.io/lightbox/)
