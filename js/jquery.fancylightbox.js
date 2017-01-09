@@ -51,9 +51,9 @@
 	    	return lightboxOverlay;
 		},
 
-		showOverlay: function(settings) {
+		showOverlay: function() {
 			var lightboxOverlay = this.createOverlay();
-    		lightboxOverlay.fadeIn(settings.speedOverlay);
+    		lightboxOverlay.fadeIn(this.settings.speedOverlay);
 		},
 
 		closeOverlay: function() {
@@ -103,8 +103,8 @@
 
 		},
 
-		showControls: function(img, settings) {
-			var dataLightbox = $(img).data('group-lightbox');
+		showControls: function() {
+			var dataLightbox = $(this.img).data('group-lightbox');
 
 			if( ( dataLightbox === undefined )) return;
 
@@ -120,10 +120,10 @@
 
 			next.on("click", function(e) {
 				e.stopPropagation();
-				$(".progress-icon").show();
+				progressIcon.show();
 				containerLightboxImg.hide();
 
-				var imgNumber = $.inArray(img, allImg) + 1;
+				var imgNumber = $.inArray(this.img, allImg) + 1;
 
 				if(imgNumber > allImg.length - 1 ) 
 				{
@@ -132,9 +132,9 @@
 				
 				var imgNext = allImg[imgNumber];
 
-				img = imgNext;
+				this.img = imgNext;
 
-				this.showLightbox(img, settings);
+				this.showLightbox();
 
 			}.bind(this));
 
@@ -143,7 +143,7 @@
 				progressIcon.show();
 				containerLightboxImg.hide();
 
-				var imgNumber = $.inArray(img, allImg) - 1;
+				var imgNumber = $.inArray(this.img, allImg) - 1;
 
 				if(imgNumber < 0 ) 
 				{
@@ -152,9 +152,9 @@
 				
 				var imgPrev = allImg[imgNumber];
 
-				img = imgPrev;
+				this.img = imgPrev;
 
-				this.showLightbox(img, settings);
+				this.showLightbox();
 
 			}.bind(this));
 		},
@@ -173,16 +173,16 @@
 			return img;
 		},
 
-		showLightbox: function(imgClick, settings) {
+		showLightbox: function() {
 			var lightboxContainerImg = $(".container-lightbox-img"),
-    		imgUrl = $(imgClick).attr('href'),
+    		imgUrl = $(this.img).attr('href'),
     		img = this.createlightboxImg();
 
 	        img.on("load", function() {
 
 	        	lightboxContainerImg.show().append( img );
 
-	            img.fadeIn(settings.speedLightbox, function() {
+	            img.fadeIn(this.settings.speedLightbox, function() {
 		            $(".progress-icon").hide();
 		        });
 
@@ -190,7 +190,7 @@
 		        	e.stopPropagation();
 		        });
 
-	        });
+	        }.bind(this));
 
 	        img.attr("src", imgUrl);
 		},
@@ -204,13 +204,19 @@
 		},
 
 		init: function(img, settings) {
-			this.showOverlay(settings);
+
+			this.settings = settings;
+			this.img = img;
+
+			this.showOverlay();
 
 			if(settings.controls === true) {
-	    		this.showControls(img, settings);
+	    		this.showControls();
 	    	}
 
-	    	this.showLightbox(img, settings);
+	    	this.showLightbox();
+
+	    	this.closeEsc();
 
 		}
 
