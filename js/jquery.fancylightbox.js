@@ -31,6 +31,10 @@
 			containerLightboxImg.on("click", function(e) {
 				e.stopPropagation();
 			});
+
+			this.containerLightbox = containerLightbox;
+			this.progressIcon = progress;
+			this.containerLightboxImg = containerLightboxImg;
         },
 
 		createOverlay: function() {
@@ -87,7 +91,7 @@
 
 			var next =  $("<span></span>", {
 				"class": "lightbox-next"
-			}).appendTo($(".container-lightbox"));
+			}).appendTo($(this.containerLightbox));
 
 			return next;
 
@@ -97,7 +101,7 @@
 
 			var prev = $("<span></span>", {
 				"class": "lightbox-prev"
-			}).appendTo($(".container-lightbox"));
+			}).appendTo($(this.containerLightbox));
 
 			return prev;
 
@@ -114,8 +118,8 @@
 			
 			var next = this.createNextArrow(),
 				prev = this.createPrevArrow(),
-				progressIcon = $(".progress-icon"),
-				containerLightboxImg = $(".container-lightbox-img");
+				progressIcon = $(this.progressIcon),
+				containerLightboxImg = $(this.containerLightboxImg);
 			
 
 			next.on("click", function(e) {
@@ -174,16 +178,17 @@
 		},
 
 		showLightbox: function() {
-			var lightboxContainerImg = $(".container-lightbox-img"),
+			var lightboxContainerImg = $(this.containerLightboxImg),
     		imgUrl = $(this.img).attr('href'),
-    		img = this.createlightboxImg();
+    		img = this.createlightboxImg(),
+    		progressIcon = $(this.progressIcon);
 
 	        img.on("load", function() {
 
-	        	lightboxContainerImg.show().append( img );
+	        	lightboxContainerImg.append( img );
 
-	            img.fadeIn(this.settings.speedLightbox, function() {
-		            $(".progress-icon").hide();
+	            lightboxContainerImg.fadeIn(this.settings.speedLightbox, function() {
+		            progressIcon.hide();
 		        });
 
 	            img.on("click", function(e) {
@@ -210,7 +215,7 @@
 
 			this.showOverlay();
 
-			if(settings.controls === true) {
+			if(this.settings.controls === true) {
 	    		this.showControls();
 	    	}
 
